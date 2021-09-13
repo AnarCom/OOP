@@ -77,9 +77,12 @@ public class HeapSortTests {
     @ParameterizedTest
     @MethodSource("getIllegalArgumentsForTest")
     public void illegalArgumentTest(int[] arr, int[] et, int n, Class<Exception> cl) {
-        assertThrows(cl, () -> {
-            HeapSort.heapSort(arr, n);
-        });
+        assertThrows(
+                cl,
+                () -> {
+                    HeapSort.heapSort(arr, n);
+                }
+        );
         assertArrayEquals(arr, et);
     }
 
