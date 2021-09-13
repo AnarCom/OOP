@@ -62,13 +62,15 @@ public class HeapSortTests {
                         new int[]{3, 15, 27},
                         new int[]{3, 15, 27},
                         12,
-                        IllegalArgumentException.class
+                        IllegalArgumentException.class,
+                        "Size if bigger than arr.length"
                 ),
                 Arguments.of(
                         new int[]{3, 15, 27},
                         new int[]{3, 15, 27},
                         -1,
-                        IllegalArgumentException.class
+                        IllegalArgumentException.class,
+                        "Size is less than zero"
                 )
         );
     }
@@ -76,13 +78,14 @@ public class HeapSortTests {
     @DisplayName("Heap (illegal argument) sort test")
     @ParameterizedTest
     @MethodSource("getIllegalArgumentsForTest")
-    public void illegalArgumentTest(int[] arr, int[] et, int n, Class<Exception> cl) {
-        assertThrows(
+    public void illegalArgumentTest(int[] arr, int[] et, int n, Class<Exception> cl, String message) {
+        var ex = assertThrows(
                 cl,
                 () -> {
                     HeapSort.heapSort(arr, n);
                 }
         );
+        assertEquals(message, ex.getMessage());
         assertArrayEquals(arr, et);
     }
 
