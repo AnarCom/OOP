@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -6,7 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Heap sort test")
@@ -16,19 +17,33 @@ public class HeapSortTests {
         return Stream.of(
                 Arguments.of(
                         new int[]{5, 4, 3, 2, 1},
-                        new int[]{1, 2, 3, 4, 5}
+                        new int[]{1, 2, 3, 4, 5},
+                        5
                 ),
                 Arguments.of(
                         new int[]{-3, 1024, 753, 22, 1},
-                        new int[]{-3, 1, 22, 753, 1024}
+                        new int[]{-3, 1, 22, 753, 1024},
+                        5
                 ),
                 Arguments.of(
                         new int[0],
-                        new int[0]
+                        new int[0],
+                        1
                 ),
                 Arguments.of(
                         new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, -1, 1},
-                        new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, Integer.MAX_VALUE}
+                        new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE, -1, 0, 1, Integer.MAX_VALUE, Integer.MAX_VALUE},
+                        7
+                ),
+                Arguments.of(
+                        new int[]{1, 0, 3, 15},
+                        new int[]{0, 1, 3, 15},
+                        2
+                ),
+                Arguments.of(
+                        new int[]{3, 15, 27},
+                        new int[]{3, 15, 27},
+                        0
                 )
         );
     }
@@ -36,8 +51,37 @@ public class HeapSortTests {
     @DisplayName("Heap sort test")
     @ParameterizedTest
     @MethodSource("getParametersForTest")
-    public void emptyArrayTest(int[] arr, int[] ans) {
-        HeapSort.heapSort(arr, arr.length);
+    public void emptyArrayTest(int[] arr, int[] ans, int n) {
+        HeapSort.heapSort(arr, n);
         assertArrayEquals(ans, arr);
     }
+
+    private Stream<Arguments> getIllegalArgumentsForTest() {
+        return Stream.of(
+                Arguments.of(
+                        new int[]{3, 15, 27},
+                        new int[]{3, 15, 27},
+                        12,
+                        IllegalArgumentException.class
+                ),
+                Arguments.of(
+                        new int[]{3, 15, 27},
+                        new int[]{3, 15, 27},
+                        -1,
+                        IllegalArgumentException.class
+                )
+        );
+    }
+
+    @DisplayName("Heap (illegal argument) sort test")
+    @ParameterizedTest
+    @MethodSource("getIllegalArgumentsForTest")
+    public void illegalArgumentTest(int[] arr, int[] et, int n, Class<Exception> cl) {
+        assertThrows(cl, () -> {
+            HeapSort.heapSort(arr, n);
+        });
+        assertArrayEquals(arr, et);
+    }
+
+
 }

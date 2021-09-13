@@ -1,6 +1,7 @@
 public class HeapSort {
     /**
      * Returns left child id by parent id
+     *
      * @param parent_id id of parent in array
      * @return id of left child
      */
@@ -10,6 +11,7 @@ public class HeapSort {
 
     /**
      * Returns right child id by parent id
+     *
      * @param parent_id id of parent in array
      * @return id of right child
      */
@@ -19,8 +21,9 @@ public class HeapSort {
 
     /**
      * checks that element by i is bigger than his parent and swaps (if not)
-     * @param arr array for build a heap
-     * @param i id of element to change
+     *
+     * @param arr       array for build a heap
+     * @param i         id of element to change
      * @param heap_size length of heap
      */
     private static void heapify(int[] arr, int i, int heap_size) {
@@ -29,8 +32,7 @@ public class HeapSort {
         int largest = i;
         if (l < heap_size && (arr[l] > arr[i])) largest = l;
         if (r < heap_size && (arr[r] > arr[largest])) largest = r;
-        if (largest != i)
-        {
+        if (largest != i) {
             int t = arr[i];
             arr[i] = arr[largest];
             arr[largest] = t;
@@ -40,7 +42,8 @@ public class HeapSort {
 
     /**
      * builds a heap for all elements of array
-     * @param arr array for building of heap
+     *
+     * @param arr  array for building of heap
      * @param size size of array
      */
     private static void buildHeap(int[] arr, int size) {
@@ -52,11 +55,18 @@ public class HeapSort {
     }
 
     /**
-     * heap sort main function 
-     * @param arr array for sorting
+     * heap sort main function
+     *
+     * @param arr  array for sorting
      * @param size size of array (or number of elements to sort)
      */
     public static void heapSort(int[] arr, int size) {
+        if (size > arr.length) {
+            throw new IllegalArgumentException("Size if bigger than arr.length");
+        }
+        if(size < 0){
+            throw new IllegalArgumentException("Size is less than zero");
+        }
         buildHeap(arr, size);
         int heapsize = size;
         for (int i = size - 1; i > 0; i--) {
