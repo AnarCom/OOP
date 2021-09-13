@@ -17,7 +17,7 @@ public class SubstringFinder {
         InputStream in;
         InputStreamReader reader = new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8);
 
-        int retVal = 0;
+        int retVal;
         StringBuilder buf = new StringBuilder();
         long id = 0;
         do {
@@ -42,6 +42,7 @@ public class SubstringFinder {
                 buf.append((char) retVal);
             }
         } while (retVal != -1);
+        reader.close();
         return ids;
     }
 }
