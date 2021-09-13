@@ -81,13 +81,9 @@ public class HeapSortTests {
     public void illegalArgumentTest(int[] arr, int[] et, int n, Class<Exception> cl, String message) {
         var ex = assertThrows(
                 cl,
-                () -> {
-                    HeapSort.heapSort(arr, n);
-                }
+                () -> HeapSort.heapSort(arr, n)
         );
         assertEquals(message, ex.getMessage());
         assertArrayEquals(arr, et);
     }
-
-
 }
