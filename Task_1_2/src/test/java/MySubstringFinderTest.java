@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -85,7 +86,7 @@ class MySubstringFinderTest {
                             for (int i = 0; i < a; i++) {
                                 fw.write(template);
                                 for (int j = 0; j < 500; j++) {
-                                    ret.add(21L + (18*j) + sdv);
+                                    ret.add(21L + (18 * j) + sdv);
                                 }
                                 sdv += template.length();
                             }
@@ -102,13 +103,42 @@ class MySubstringFinderTest {
     @DisplayName("Test of normal work")
     public void mainTest(String substring, TestDataProvider provider) throws IOException {
         var exp = provider.provideFileAndAns("input.txt");
-
         MySubstringFinder finder = new MySubstringFinder();
         var data = finder.findSubPositions("input.txt", substring);
+
         assertArrayEquals(exp, data);
+
         File file = new File("input.txt");
         boolean wasDeleted = file.delete();
         assertTrue(wasDeleted);
+    }
+
+    @Test
+    @DisplayName("Test for exception if path to file is null")
+    public void filenameExceptionTest() {
+        try {
+            MySubstringFinder finder = new MySubstringFinder();
+            finder.findSubPositions(null, "");
+            fail("Should throw Exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("path to file is null", e.getMessage());
+        } catch (IOException e){
+            fail("Throw exception but not should");
+        }
+    }
+
+    @Test
+    @DisplayName("Test for exception if substring is null")
+    public void substringExceptionTest() {
+        try {
+            MySubstringFinder finder = new MySubstringFinder();
+            finder.findSubPositions("input.txt", null);
+            fail("Should throw Exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("substring is null", e.getMessage());
+        } catch (IOException e){
+            fail("Throw exception but not should");
+        }
     }
 
     @FunctionalInterface

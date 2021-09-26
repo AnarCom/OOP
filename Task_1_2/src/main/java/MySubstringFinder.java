@@ -1,9 +1,11 @@
-import com.google.common.annotations.VisibleForTesting;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Finder of substring in large file.
+ */
 public class MySubstringFinder {
 
     private Map<Character, Integer> offsets;
@@ -16,8 +18,7 @@ public class MySubstringFinder {
         return calcOffset(c, offsets, position);
     }
 
-    @VisibleForTesting
-    void buildOffset(String substr) {
+    private void buildOffset(String substr) {
         Map<Character, Integer> offsets = new HashMap<>();
         String reversed = new StringBuilder(substr).reverse().toString();
         if (reversed.length() > 0) {
@@ -30,21 +31,28 @@ public class MySubstringFinder {
         this.offsets = offsets;
     }
 
-    @VisibleForTesting
-    Integer getOffset(Character a, int subStrLen) {
+    private Integer getOffset(Character a, int subStrLen) {
         if (offsets.containsKey(a)) {
             return offsets.get(a);
         }
         return subStrLen;
     }
 
+    /**
+     * Finds the substring positions.
+     *
+     * @param fileName  Name of file to read
+     * @param substring Substring that finds alg
+     * @return Array of start pos (of substring)
+     * @throws IOException if problems with reading from file
+     */
     public Long[] findSubPositions(String fileName, String substring) throws IOException {
         if (substring == null) {
-            throw new NullPointerException("substring is null");
+            throw new IllegalArgumentException("substring is null");
         }
 
         if (fileName == null) {
-            throw new NullPointerException("file is null");
+            throw new IllegalArgumentException("path to file is null");
         }
         if (substring.isEmpty()) {
             return new Long[0];
