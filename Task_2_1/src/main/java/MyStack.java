@@ -27,12 +27,23 @@ public class MyStack<T> {
         }
     }
 
+    /**
+     * Pushed stack to main stack.
+     *
+     * @param myStack stack to push
+     */
     public void pushStack(MyStack<T> myStack) {
         for (int i = 0; i < myStack.count(); i++) {
             this.push(myStack.arr[i]);
         }
     }
 
+    /**
+     * Popes stack.
+     *
+     * @param size size of stack to pop
+     * @return New stack with data from main stack
+     */
     public MyStack<T> popStack(int size) {
         if (end - size < 0) {
             throw new IllegalArgumentException("size is bigger that stack.size()");
@@ -69,6 +80,9 @@ public class MyStack<T> {
         return arr[--end];
     }
 
+    /**
+     * @return number of elements that locates in stack
+     */
     public int count() {
         return end;
     }
