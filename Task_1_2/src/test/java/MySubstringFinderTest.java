@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,16 +27,6 @@ class MySubstringFinderTest {
                             fw.write(str);
                             fw.close();
                             return new Long[]{0L, 1L, 2L, 13L, 14L, 18L, 19L, 23L};
-                        }
-                ),
-                Arguments.of(
-                        "ara",
-                        (TestDataProvider) (filename) -> {
-                            FileWriter fw = new FileWriter(filename, StandardCharsets.UTF_8);
-                            String str = "ararara arara araara";
-                            fw.write(str);
-                            fw.close();
-                            return new Long[]{0L, 2L, 4L, 8L, 10L, 14L, 17L};
                         }
                 ),
                 Arguments.of(
@@ -94,6 +85,34 @@ class MySubstringFinderTest {
                             fw.close();
                             return ret.toArray(new Long[0]);
                         }
+                ),
+                Arguments.of(
+                        "n".repeat(10),
+                        (TestDataProvider) (filename) -> {
+                            FileWriter fw = new FileWriter(filename, StandardCharsets.UTF_8);
+                            String str = "nnnn";
+                            fw.write(str);
+                            fw.close();
+                            return new Long[]{};
+                        }
+                ),
+                Arguments.of(
+                        "n".repeat(10),
+                        (TestDataProvider) (filename) -> {
+                            FileWriter fw = new FileWriter(filename, StandardCharsets.UTF_8);
+                            fw.write("");
+                            fw.close();
+                            return new Long[]{};
+                        }
+                ),
+                Arguments.of(
+                        "",
+                        (TestDataProvider) (filename) -> {
+                            FileWriter fw = new FileWriter(filename, StandardCharsets.UTF_8);
+                            fw.write("b".repeat(120));
+                            fw.close();
+                            return new Long[]{};
+                        }
                 )
         );
     }
@@ -113,32 +132,45 @@ class MySubstringFinderTest {
         assertTrue(wasDeleted);
     }
 
-    @Test
-    @DisplayName("Test for exception if path to file is null")
-    public void filenameExceptionTest() {
-        try {
-            MySubstringFinder finder = new MySubstringFinder();
-            finder.findSubPositions(null, "");
-            fail("Should throw Exception");
-        } catch (IllegalArgumentException e) {
-            assertEquals("path to file is null", e.getMessage());
-        } catch (IOException e){
-            fail("Throw exception but not should");
-        }
+    public Stream<Arguments> getTestSourceForExceptions() {
+        return Stream.of(
+                Arguments.of(
+                        null,
+                        "subs",
+                        "path to file is null",
+                        IllegalArgumentException.class
+                ),
+                Arguments.of(
+                        "null.txt",
+                        null,
+                        "substring is null",
+                        IllegalArgumentException.class
+                ),
+                Arguments.of(
+                        "null.txt",
+                        "null",
+                        "file not found",
+                        IllegalArgumentException.class
+                )
+        );
     }
 
-    @Test
-    @DisplayName("Test for exception if substring is null")
-    public void substringExceptionTest() {
-        try {
-            MySubstringFinder finder = new MySubstringFinder();
-            finder.findSubPositions("input.txt", null);
-            fail("Should throw Exception");
-        } catch (IllegalArgumentException e) {
-            assertEquals("substring is null", e.getMessage());
-        } catch (IOException e){
-            fail("Throw exception but not should");
-        }
+
+    @ParameterizedTest
+    @MethodSource("getTestSourceForExceptions")
+    @DisplayName("Test of not normal work")
+    public void fileNotExistsExceptionTest(
+            String fileName,
+            String substring,
+            String errMessage,
+            Class<Exception> cl
+
+    ) {
+        Exception e = Assertions.assertThrows(
+                cl,
+                () -> new MySubstringFinder().findSubPositions(fileName, substring)
+        );
+        assertEquals(e.getMessage(), errMessage);
     }
 
     @FunctionalInterface
