@@ -1,8 +1,9 @@
 import org.junit.jupiter.api.Test;
 
-import java.util.Stack;
+import java.util.EmptyStackException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class MyStackTest {
     @Test
@@ -57,6 +58,28 @@ public class MyStackTest {
             assertEquals(1, l.count());
             assertEquals(i, l.pop());
             assertEquals(0, l.count());
+        }
+    }
+
+    public void exceptionTest(){
+        try{
+            MyStack<Integer> stack = new MyStack<>();
+            stack.pop();
+            fail();
+        } catch (EmptyStackException e){
+
+        } catch (Exception e){
+            fail();
+        }
+
+        try{
+            MyStack<Integer> stack = new MyStack<>();
+            stack.popStack(124);
+            fail();
+        } catch (IllegalArgumentException e){
+            assertEquals("size is bigger that stack.size()", e.getMessage());
+        } catch (Exception e){
+            fail();
         }
     }
 }
