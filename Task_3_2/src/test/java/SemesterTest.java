@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 class SemesterTest {
 
-    private static Semester getStdSemesterForTest() {
+    public static Semester getStdSemesterForTest() {
         Semester sem = new Semester();
         sem.addSubject("Math", (byte) 5);
         sem.addSubject("Math1", (byte) 4);
@@ -16,7 +16,13 @@ class SemesterTest {
         return sem;
     }
 
-    private static Semester getEmptySemesterForTest() {
+    public static Semester getGoodSemesterForTest() {
+        Semester sem = new Semester();
+        sem.addSubject("Math", (byte) 5);
+        return sem;
+    }
+
+    public static Semester getEmptySemesterForTest() {
         return new Semester();
     }
 
