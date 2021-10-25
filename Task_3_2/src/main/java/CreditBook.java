@@ -21,6 +21,18 @@ public class CreditBook {
         this.semesters = semesters;
     }
 
+    private List<Double> getListFromAllSemesters() {
+        List<Double> marks = new ArrayList<>();
+        for (var i : semesters) {
+            marks.addAll(
+                    Arrays.stream(i.getSubjectMarks())
+                            .map(Double::valueOf)
+                            .collect(Collectors.toSet())
+            );
+        }
+        return marks;
+    }
+
     private List<Double> getSetFromAllSemesters() {
         Map<String, Double> retMap = new HashMap<>();
         for (var i : semesters) {
@@ -55,7 +67,7 @@ public class CreditBook {
         }
         List<Double> marks = getSetFromAllSemesters();
         if (
-                marks.stream()
+                getListFromAllSemesters().stream()
                         .anyMatch(i -> i <= 3)
         ) {
             return false;
