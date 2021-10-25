@@ -98,6 +98,19 @@ public class CreditBookTest {
                 ),
                 Arguments.of(
                         true,
+                        (TestDataProvider) () -> {
+                            var buf = new CreditBook(
+                                    List.of(
+                                            SemesterTest.getGoodSemesterForTest(),
+                                            SemesterTest.getGoodSemesterForTest()
+                                    )
+                            );
+                            buf.setDiplomaMark((byte) 5);
+                            return buf;
+                        }
+                ),
+                Arguments.of(
+                        false,
                         (TestDataProvider) () -> new CreditBook(
                                 List.of(
                                         SemesterTest.getGoodSemesterForTest(),

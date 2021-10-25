@@ -1,11 +1,6 @@
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,6 +8,10 @@ public class CreditBook {
     @Getter
     @Setter
     private List<Semester> semesters;
+
+    @Getter
+    @Setter
+    private Byte diplomaMark = 0;
 
     public CreditBook() {
         semesters = new ArrayList<>();
@@ -32,6 +31,20 @@ public class CreditBook {
             );
         }
         return marks;
+    }
+
+    private List<Double> getSetFromAllSemesters() {
+        Map<String, Double> retMap = new HashMap<>();
+        for (var i : semesters) {
+            for (var pair : i.getSubjectPairs()) {
+                retMap.put(pair.getFirst(), pair.getSecond().doubleValue());
+            }
+        }
+
+        return retMap.keySet()
+                .stream()
+                .map(retMap::get)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -60,7 +73,11 @@ public class CreditBook {
             return false;
         }
 
-        return getAvgScore() >= 4.5;
+        long fiveCounter = marks.stream()
+                .filter(i -> i == 5)
+                .count();
+
+        return ((double) fiveCounter /marks.size() >= 0.75) && diplomaMark == 5;
     }
 
     public boolean canGetAdditionalMoney() {

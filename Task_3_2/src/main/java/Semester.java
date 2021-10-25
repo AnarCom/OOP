@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Semester {
     @Getter
@@ -20,6 +21,7 @@ public class Semester {
      * @param mark    mark of subject
      */
     public void addSubject(String subject, Byte mark) {
+        removeSubjectByName(subject);
         subjects.add(new Pair<>(subject, mark));
     }
 
@@ -55,12 +57,15 @@ public class Semester {
     }
 
     /**
-     *
      * @return All subjects marks (with no subject name).
      */
     public Byte[] getSubjectMarks() {
         return subjects.stream()
                 .map(Pair::getSecond)
                 .toArray(Byte[]::new);
+    }
+
+    public List<Pair<String, Byte>> getSubjectPairs(){
+        return subjects;
     }
 }
