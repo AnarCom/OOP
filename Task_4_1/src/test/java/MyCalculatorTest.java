@@ -1,6 +1,9 @@
 import calculator.MyCalculator;
+import enums.CalcModes;
+import operations.CosOperation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -62,4 +65,35 @@ public class MyCalculatorTest {
         );
     }
 
+    @Test
+    public void registerExceptionTest(){
+        MyCalculator calculator = new MyCalculator();
+        var a = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.registerOperation(new CosOperation())
+        );
+        Assertions.assertEquals("this key is exists in HashMap", a.getMessage());
+    }
+
+    @Test
+    public void registerNoExceptionTest(){
+        MyCalculator calculator = new MyCalculator();
+        calculator.registerOperation(new CosOperation(), true);
+    }
+
+    @Test
+    public void registerActionTest(){
+        MyCalculator calculator = new MyCalculator(CalcModes.EMPTY_OPERATIONS);
+        var a = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.calc("cos 0")
+        );
+        Assertions.assertEquals(
+                "Cannot parse operation = 'cos' (Check that the operation is registered)",
+                a.getMessage()
+        );
+
+        calculator.registerOperation(new CosOperation());
+        Assertions.assertDoesNotThrow(() -> calculator.calc("cos 0"));
+    }
 }
