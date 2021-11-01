@@ -1,15 +1,25 @@
 import calculator.MyCalculator;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println(calculate(args));
-    }
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-    public static Double calculate(String[] args) {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("You have to pass only 1 string");
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("write -1 to exit");
+        while (true){
+            String formula = reader.readLine();
+            if(formula.equals("-1")){
+                break;
+            }
+            else {
+                System.out.println(calculate(formula));
+            }
         }
+    }
+    public static Double calculate(String formula) {
         MyCalculator calculator = new MyCalculator();
-        return calculator.calc(args[0]);
+        return calculator.calc(formula);
     }
 }

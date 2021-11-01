@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,25 +23,7 @@ public class MainTest {
     public void calculateTest(Double ans, String formula) {
         Assertions.assertEquals(
                 ans,
-                Main.calculate(new String[]{formula})
+                Main.calculate(formula)
         );
-    }
-
-    @Test
-    public void tooManyArgumentsTest() {
-        var a = Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> Main.calculate(new String[]{"", ""})
-        );
-        Assertions.assertEquals("You have to pass only 1 string", a.getMessage());
-    }
-
-    @Test
-    public void tooFewArgumentsTest() {
-        var a = Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> Main.calculate(new String[0])
-        );
-        Assertions.assertEquals("You have to pass only 1 string", a.getMessage());
     }
 }
