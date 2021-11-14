@@ -14,4 +14,8 @@ public class NotebookRecord {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Date created;
+
+    public String toString(){
+        return String.format("Header: %s, Body: %s", header, body);
+    }
 }

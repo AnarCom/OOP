@@ -149,4 +149,37 @@ public class NotebookManagerTest {
 
         deleteDefaultFile();
     }
+
+    @Test
+    public void deleteRecord() throws IOException, JSONException {
+        writeFromFileToDefaultFile("one_note.json");
+        NotebookManager manager = new NotebookManager();
+
+        manager.deleteRecord("header");
+
+        Assertions.assertArrayEquals(
+                new NotebookRecord[]{},
+                manager.getRecords().toArray()
+        );
+
+        deleteDefaultFile();
+    }
+
+    @Test
+    public void deleteNotExistsRecord() throws IOException, JSONException, ParseException {
+        writeFromFileToDefaultFile("one_note.json");
+        NotebookManager manager = new NotebookManager();
+
+        manager.deleteRecord("header2");
+
+        var date = getParser().parse("2021-11-14 07:06:12+0000");
+        Assertions.assertArrayEquals(
+                new NotebookRecord[]{
+                        new NotebookRecord("header", "body", date)
+                },
+                manager.getRecords().toArray()
+        );
+
+        deleteDefaultFile();
+    }
 }
