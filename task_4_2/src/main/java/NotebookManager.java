@@ -80,7 +80,7 @@ public class NotebookManager {
      * Deletes all records from notebook.
      */
     public void deleteAll() {
-        records = new ArrayList<>();
+        records.clear();
     }
 
     /**

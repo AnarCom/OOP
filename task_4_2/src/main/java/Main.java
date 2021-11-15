@@ -14,13 +14,14 @@ public class Main {
             case "-add":
                 if (validateParameters(args, 3)) {
                     manager.addRecord(args[1], args[2]);
+                    manager.save();
                 }
                 break;
             case "-show":
                 if (args.length == 1) {
                     printRecords(manager.getRecords());
                 } else {
-                    if (validateParameters(args, 2)) {
+                    if (validateParameters(args, 3)) {
                         var from = getDate(args[1]);
                         var to = getDate(args[2]);
                         List<String> list = new ArrayList<>(Arrays.asList(args).subList(3, args.length));
@@ -31,6 +32,7 @@ public class Main {
             case "-rm":
                 if (validateParameters(args, 2)) {
                     manager.deleteRecord(args[1]);
+                    manager.save();
                 }
                 break;
             default:
