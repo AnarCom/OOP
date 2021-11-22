@@ -136,5 +136,5 @@ gradle-app.setting
 
 ### Gradle Patch ###
 **/build/
-
+switch_java.bat
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij+all
