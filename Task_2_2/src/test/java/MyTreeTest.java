@@ -47,14 +47,14 @@ public class MyTreeTest {
     public void containsAllInEmptyTreeTest(){
         MyTree<Integer> tree = new MyTree<>();
         Collection<Integer> contains = new ArrayList<>();
-        Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        Collections.addAll(contains, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         Assertions.assertFalse(tree.containsAll(contains));
     }
 
     @Test
     public void containsAllTest() {
         Collection<Integer> contains = new ArrayList<>();
-        Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        Collections.addAll(contains, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         MyTree<Integer> tree = new MyTree<>();
         Collections.addAll(tree, contains.toArray(new Integer[0]));
         Assertions.assertTrue(tree.containsAll(contains));
@@ -82,7 +82,7 @@ public class MyTreeTest {
     @Test
     public void removeTest() {
         Collection<Integer> contains = new ArrayList<>();
-        Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        Collections.addAll(contains, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         MyTree<Integer> tree = new MyTree<>();
         Collections.addAll(tree, contains.toArray(new Integer[0]));
