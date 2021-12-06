@@ -1,16 +1,12 @@
-import com.sun.tools.attach.VirtualMachine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class MyThreeTest {
+public class MyTreeTest {
     @Test
     public void addTest() {
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         List<Integer> arr = new ArrayList<>();
         Collections.addAll(arr, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         for (var i : arr) {
@@ -24,7 +20,7 @@ public class MyThreeTest {
 
     @Test
     public void containsInEmptyThreeTest(){
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Integer[] contains = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         for(var i : contains){
@@ -35,7 +31,7 @@ public class MyThreeTest {
 
     @Test
     public void containsTest() {
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Integer[] contains = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Collections.addAll(three, contains);
         for (var j : contains) {
@@ -49,7 +45,7 @@ public class MyThreeTest {
 
     @Test
     public void containsAllInEmptyThreeTest(){
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         Assertions.assertFalse(three.containsAll(contains));
@@ -59,7 +55,7 @@ public class MyThreeTest {
     public void containsAllTest() {
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Collections.addAll(three, contains.toArray(new Integer[0]));
         Assertions.assertTrue(three.containsAll(contains));
 
@@ -69,14 +65,14 @@ public class MyThreeTest {
 
     @Test
     public void emptyThreeTest() {
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Assertions.assertEquals(0, three.size());
         Assertions.assertTrue(three.isEmpty());
     }
 
     @Test
     public void notEmptyThreeTest() {
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         three.add(12);
         three.add(13);
         Assertions.assertEquals(2, three.size());
@@ -88,7 +84,7 @@ public class MyThreeTest {
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Collections.addAll(three, contains.toArray(new Integer[0]));
 
         for (var j : contains) {
@@ -104,7 +100,7 @@ public class MyThreeTest {
         Integer[] arr = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, arr);
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Collections.addAll(three, arr);
         Assertions.assertTrue(three.removeAll(contains));
         Assertions.assertTrue(three.isEmpty());
@@ -121,7 +117,7 @@ public class MyThreeTest {
         Collection<Integer> forRetain = new ArrayList<>();
         Collections.addAll(forRetain, retain);
 
-        MyThree<Integer> three = new MyThree<>();
+        MyTree<Integer> three = new MyTree<>();
         Collections.addAll(three, arr);
         three.retainAll(forRetain);
         for(var i : three){
@@ -131,7 +127,7 @@ public class MyThreeTest {
 
     @Test
     public void toArrayTest(){
-        MyThree<Integer> t = new MyThree<>();
+        MyTree<Integer> t = new MyTree<>();
         t.add(12);
         t.add(13);
         var g = t.toArray();
@@ -139,12 +135,12 @@ public class MyThreeTest {
     }
     @Test
     public void toEmptyArrayTest(){
-        Assertions.assertArrayEquals(new Integer[0], new MyThree<Integer>().toArray());
+        Assertions.assertArrayEquals(new Integer[0], new MyTree<Integer>().toArray());
     }
 
     @Test
     public void toArrayWithBaseTest(){
-        MyThree<Integer> t = new MyThree<>();
+        MyTree<Integer> t = new MyTree<>();
         t.add(12);
         t.add(13);
         var g = t.toArray(new Integer[2]);
@@ -152,6 +148,20 @@ public class MyThreeTest {
     }
     @Test
     public void toEmptyArrayWithBaseTest(){
-        Assertions.assertArrayEquals(new Integer[0], new MyThree<Integer>().toArray(new Integer[0]));
+        Assertions.assertArrayEquals(new Integer[0], new MyTree<Integer>().toArray(new Integer[0]));
+    }
+
+    @Test
+    public void exceptionTest(){
+        Assertions.assertThrows(
+                ConcurrentModificationException.class,
+                () -> {
+                    MyTree<Integer> tr = new MyTree<>();
+                    tr.add(123);
+                    for (var t1: tr) {
+                        tr.add(t1);
+                    }
+                }
+        );
     }
 }

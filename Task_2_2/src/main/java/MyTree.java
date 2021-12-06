@@ -2,11 +2,12 @@ import lombok.*;
 
 import java.util.*;
 
-public class MyThree<T extends Comparable<T>> implements Collection<T> {
-    private ThreeNode<T> root;
+public class MyTree<T extends Comparable<T>> implements Collection<T> {
+    private TreeNode<T> root;
     private int size;
+    private boolean unchanged = true;
 
-    public MyThree() {
+    public MyTree() {
         size = 0;
     }
 
@@ -24,7 +25,7 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
     public boolean contains(Object o) {
         T element = (T) o;
 
-        ThreeNode<T> now = root;
+        TreeNode<T> now = root;
         while (now != null) {
             int res = now.getData().compareTo(element);
             if (res < 0) {
@@ -42,11 +43,19 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
     public Iterator<T> iterator() {
         return new Iterator<T>() {
 
-            private final Stack<ThreeNode<T>> stack = new Stack<>();
+            private final Stack<TreeNode<T>> stack = new Stack<>();
             private boolean flag = false;
+            private boolean firstInit = true;
 
             @Override
             public boolean hasNext() {
+                if(firstInit){
+                    firstInit = false;
+                    unchanged = true;
+                }
+                if (!unchanged) {
+                    throw new ConcurrentModificationException();
+                }
                 prepareData();
                 return !stack.isEmpty();
             }
@@ -55,11 +64,12 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
             public T next() {
                 prepareData();
                 var now = stack.pop();
+
                 addChildrenStack(now);
                 return now.getData();
             }
 
-            private void addChildrenStack(ThreeNode<T> node) {
+            private void addChildrenStack(TreeNode<T> node) {
                 if (node.getLeft() != null) {
                     stack.push(node.getLeft());
                 }
@@ -83,7 +93,7 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
     public Object[] toArray() {
         Object[] genericArray = new Object[size];
         int i = 0;
-        for(var j : this){
+        for (var j : this) {
             genericArray[i] = j;
             i++;
         }
@@ -92,11 +102,11 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
-        if(a.length < size){
+        if (a.length < size) {
             a = Arrays.copyOf(a, size);
         }
         int i = 0;
-        for(var j : this){
+        for (var j : this) {
             a[i] = (T1) j;
             i++;
         }
@@ -105,15 +115,16 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public boolean add(T t) {
+        unchanged = false;
         // if root is empty -> add to root
         if (root == null) {
-            root = new ThreeNode<>(t);
+            root = new TreeNode<>(t);
             size++;
             return true;
         }
 
         // if three is not empty -> find vertex where we can add;
-        ThreeNode<T> buff = root;
+        TreeNode<T> buff = root;
         int res;
         while (true) {
             res = buff.getData().compareTo(t);
@@ -132,7 +143,7 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
             }
         }
 
-        var node = new ThreeNode<>(t);
+        var node = new TreeNode<>(t);
         if (res < 0) {
             buff.setLeft(node);
         } else {
@@ -144,8 +155,9 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public boolean remove(Object o) {
+        unchanged = false;
         T data = (T) o;
-        MyThree<T> three = new MyThree<>();
+        MyTree<T> three = new MyTree<>();
         boolean deleted = false;
         for (var i : this) {
             if (data.compareTo(i) == 0 && !deleted) {
@@ -176,6 +188,7 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
+        unchanged = false;
         for (var i : c) {
             add(i);
         }
@@ -184,6 +197,7 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
+        unchanged = false;
         boolean res = true;
         for (var i : c) {
             res &= remove(i);
@@ -193,7 +207,8 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if(isEmpty()){
+        unchanged = false;
+        if (isEmpty()) {
             return false;
         }
         boolean flag = true;
@@ -213,14 +228,15 @@ public class MyThree<T extends Comparable<T>> implements Collection<T> {
 
     @Override
     public void clear() {
+        unchanged = false;
         root = null;
     }
 }
 
 @Data
 @RequiredArgsConstructor
-class ThreeNode<T extends Comparable<T>> {
+class TreeNode<T extends Comparable<T>> {
     private final T data;
-    private ThreeNode<T> left;
-    private ThreeNode<T> right;
+    private TreeNode<T> left;
+    private TreeNode<T> right;
 }
