@@ -6,77 +6,77 @@ import java.util.*;
 public class MyTreeTest {
     @Test
     public void addTest() {
-        MyTree<Integer> three = new MyTree<>();
+        MyTree<Integer> tree = new MyTree<>();
         List<Integer> arr = new ArrayList<>();
         Collections.addAll(arr, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         for (var i : arr) {
-            Assertions.assertTrue(three.add(i));
+            Assertions.assertTrue(tree.add(i));
         }
-        for (var j : three) {
+        for (var j : tree) {
             arr.remove(j);
         }
         Assertions.assertTrue(arr.isEmpty());
     }
 
     @Test
-    public void containsInEmptyThreeTest(){
-        MyTree<Integer> three = new MyTree<>();
+    public void containsInEmptyTreeTest(){
+        MyTree<Integer> tree = new MyTree<>();
         Integer[] contains = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
         for(var i : contains){
-            Assertions.assertFalse(three.contains(i));
+            Assertions.assertFalse(tree.contains(i));
         }
     }
 
 
     @Test
     public void containsTest() {
-        MyTree<Integer> three = new MyTree<>();
+        MyTree<Integer> tree = new MyTree<>();
         Integer[] contains = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        Collections.addAll(three, contains);
+        Collections.addAll(tree, contains);
         for (var j : contains) {
-            Assertions.assertTrue(three.contains(j));
+            Assertions.assertTrue(tree.contains(j));
         }
         Integer[] notContains = new Integer[]{17, 22, -3, 25};
         for (var j : notContains) {
-            Assertions.assertFalse(three.contains(j));
+            Assertions.assertFalse(tree.contains(j));
         }
     }
 
     @Test
-    public void containsAllInEmptyThreeTest(){
-        MyTree<Integer> three = new MyTree<>();
+    public void containsAllInEmptyTreeTest(){
+        MyTree<Integer> tree = new MyTree<>();
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        Assertions.assertFalse(three.containsAll(contains));
+        Assertions.assertFalse(tree.containsAll(contains));
     }
 
     @Test
     public void containsAllTest() {
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        MyTree<Integer> three = new MyTree<>();
-        Collections.addAll(three, contains.toArray(new Integer[0]));
-        Assertions.assertTrue(three.containsAll(contains));
+        MyTree<Integer> tree = new MyTree<>();
+        Collections.addAll(tree, contains.toArray(new Integer[0]));
+        Assertions.assertTrue(tree.containsAll(contains));
 
         Collection<Integer> notContains = new ArrayList<>();
-        Assertions.assertFalse(three.containsAll(notContains));
+        Assertions.assertFalse(tree.containsAll(notContains));
     }
 
     @Test
-    public void emptyThreeTest() {
-        MyTree<Integer> three = new MyTree<>();
-        Assertions.assertEquals(0, three.size());
-        Assertions.assertTrue(three.isEmpty());
+    public void emptyTreeTest() {
+        MyTree<Integer> tree = new MyTree<>();
+        Assertions.assertEquals(0, tree.size());
+        Assertions.assertTrue(tree.isEmpty());
     }
 
     @Test
-    public void notEmptyThreeTest() {
-        MyTree<Integer> three = new MyTree<>();
-        three.add(12);
-        three.add(13);
-        Assertions.assertEquals(2, three.size());
-        Assertions.assertFalse(three.isEmpty());
+    public void notEmptyTreeTest() {
+        MyTree<Integer> tree = new MyTree<>();
+        tree.add(12);
+        tree.add(13);
+        Assertions.assertEquals(2, tree.size());
+        Assertions.assertFalse(tree.isEmpty());
     }
 
     @Test
@@ -84,15 +84,15 @@ public class MyTreeTest {
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
-        MyTree<Integer> three = new MyTree<>();
-        Collections.addAll(three, contains.toArray(new Integer[0]));
+        MyTree<Integer> tree = new MyTree<>();
+        Collections.addAll(tree, contains.toArray(new Integer[0]));
 
         for (var j : contains) {
-            Assertions.assertTrue(three.remove(j));
+            Assertions.assertTrue(tree.remove(j));
         }
-        Assertions.assertTrue(three.isEmpty());
-        Assertions.assertEquals(0, three.size());
-        Assertions.assertFalse(three.remove(123213));
+        Assertions.assertTrue(tree.isEmpty());
+        Assertions.assertEquals(0, tree.size());
+        Assertions.assertFalse(tree.remove(123213));
     }
 
     @Test
@@ -100,12 +100,12 @@ public class MyTreeTest {
         Integer[] arr = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Collection<Integer> contains = new ArrayList<>();
         Collections.addAll(contains, arr);
-        MyTree<Integer> three = new MyTree<>();
-        Collections.addAll(three, arr);
-        Assertions.assertTrue(three.removeAll(contains));
-        Assertions.assertTrue(three.isEmpty());
-        Assertions.assertEquals(0, three.size());
-        Assertions.assertFalse(three.remove(123213));
+        MyTree<Integer> tree = new MyTree<>();
+        Collections.addAll(tree, arr);
+        Assertions.assertTrue(tree.removeAll(contains));
+        Assertions.assertTrue(tree.isEmpty());
+        Assertions.assertEquals(0, tree.size());
+        Assertions.assertFalse(tree.remove(123213));
     }
 
     @Test
@@ -117,10 +117,10 @@ public class MyTreeTest {
         Collection<Integer> forRetain = new ArrayList<>();
         Collections.addAll(forRetain, retain);
 
-        MyTree<Integer> three = new MyTree<>();
-        Collections.addAll(three, arr);
-        three.retainAll(forRetain);
-        for(var i : three){
+        MyTree<Integer> tree = new MyTree<>();
+        Collections.addAll(tree, arr);
+        tree.retainAll(forRetain);
+        for(var i : tree){
             Assertions.assertTrue(forRetain.contains(i));
         }
     }

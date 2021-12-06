@@ -1,6 +1,8 @@
 import lombok.*;
 
 import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class MyTree<T extends Comparable<T>> implements Collection<T> {
     private TreeNode<T> root;
@@ -123,7 +125,7 @@ public class MyTree<T extends Comparable<T>> implements Collection<T> {
             return true;
         }
 
-        // if three is not empty -> find vertex where we can add;
+        // if tree is not empty -> find vertex where we can add;
         TreeNode<T> buff = root;
         int res;
         while (true) {
@@ -157,18 +159,18 @@ public class MyTree<T extends Comparable<T>> implements Collection<T> {
     public boolean remove(Object o) {
         unchanged = false;
         T data = (T) o;
-        MyTree<T> three = new MyTree<>();
+        MyTree<T> tree = new MyTree<>();
         boolean deleted = false;
         for (var i : this) {
             if (data.compareTo(i) == 0 && !deleted) {
                 deleted = true;
             } else {
-                three.add(i);
+                tree.add(i);
             }
         }
         if (deleted) {
-            root = three.root;
-            size = three.size;
+            root = tree.root;
+            size = tree.size;
         }
         return deleted;
     }
@@ -230,6 +232,15 @@ public class MyTree<T extends Comparable<T>> implements Collection<T> {
     public void clear() {
         unchanged = false;
         root = null;
+    }
+
+    @Override
+    public Stream<T> stream(){
+        Stream.Builder<T> builder = Stream.builder();
+        for(var i : this){
+            builder.add(i);
+        }
+        return builder.build();
     }
 }
 

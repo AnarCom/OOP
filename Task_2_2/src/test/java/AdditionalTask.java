@@ -1,26 +1,23 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class AdditionalTask {
     @Test
     public void additionalTask(){
-        MyTree<String> three = new MyTree<>();
-        three.add("Hello world");
-        three.add("Java");
-        three.add("Kotlin");
-        three.add("Cpp");
+        MyTree<String> tree = new MyTree<>();
+        tree.add("Hello world");
+        tree.add("Java");
+        tree.add("Kotlin");
+        tree.add("Cpp");
 
-        List<String> subst = new ArrayList<>();
-        subst.add("Hello");
-        subst.add("pp");
+        String subs = "ava";
 
-        Stream.of(three)
-                .map(i -> {
-                    System.out.println(i);
-                    return i;
-                });
+        var g = tree.stream()
+                .filter(i -> i.contains(subs))
+                .collect(Collectors.toList());
+        Assertions.assertEquals(List.of("Java"), g);
     }
 }
