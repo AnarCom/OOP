@@ -15,7 +15,7 @@ public class AdditionalTask {
 
         String subs = "ava";
 
-        var g = tree.stream()
+        var g = tree.additionalTaskStream()
                 .filter(i -> i.contains(subs))
                 .collect(Collectors.toList());
         Assertions.assertEquals(List.of("Java"), g);

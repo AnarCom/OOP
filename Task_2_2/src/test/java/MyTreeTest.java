@@ -60,7 +60,9 @@ public class MyTreeTest {
         Assertions.assertTrue(tree.containsAll(contains));
 
         Collection<Integer> notContains = new ArrayList<>();
-        Assertions.assertFalse(tree.containsAll(notContains));
+        Assertions.assertFalse(
+                tree.containsAll(notContains)
+        );
     }
 
     @Test
@@ -78,7 +80,6 @@ public class MyTreeTest {
         Assertions.assertEquals(2, tree.size());
         Assertions.assertFalse(tree.isEmpty());
     }
-
     @Test
     public void removeTest() {
         Collection<Integer> contains = new ArrayList<>();
@@ -88,7 +89,9 @@ public class MyTreeTest {
         Collections.addAll(tree, contains.toArray(new Integer[0]));
 
         for (var j : contains) {
-            Assertions.assertTrue(tree.remove(j));
+            Assertions.assertTrue(
+                    tree.remove(j)
+            );
         }
         Assertions.assertTrue(tree.isEmpty());
         Assertions.assertEquals(0, tree.size());
@@ -107,7 +110,6 @@ public class MyTreeTest {
         Assertions.assertEquals(0, tree.size());
         Assertions.assertFalse(tree.remove(123213));
     }
-
     @Test
     public void retainAllTest() {
         Integer[] arr = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
