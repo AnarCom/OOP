@@ -338,13 +338,9 @@ public class MyTree<T> implements Collection<T> {
 }
 
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 class TreeNode<T> {
-    public TreeNode(T data) {
-        this.data = data;
-    }
-
-    private T data;
+    private final T data;
     int minDepth = 0;
     private TreeNode<T> left;
     private TreeNode<T> right;
