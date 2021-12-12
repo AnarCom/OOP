@@ -35,7 +35,6 @@ public class MyTree<T> implements Collection<T> {
 
     public Iterator<T> DFS() {
         return new Iterator<T>() {
-            private boolean flag = false;
             private boolean firstInit = true;
             Stack<TreeNode<T>> st = null;
 
@@ -78,8 +77,7 @@ public class MyTree<T> implements Collection<T> {
     }
 
     public Iterator<T> BFS() {
-        return new Iterator<T>() {
-            private boolean flag = false;
+        return new Iterator<>() {
             private boolean firstInit = true;
             Queue<TreeNode<T>> st = null;
 
