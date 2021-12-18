@@ -138,3 +138,5 @@ gradle-app.setting
 **/build/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij+all
+task_4_2/data.json
+task_4_2/switch_java.bat
