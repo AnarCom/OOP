@@ -22,8 +22,11 @@ public class GettingDataForGraphTest {
     @AfterEach
     public void finishTime() {
         System.out.println((System.nanoTime() - started) / 1000000);
+        started = 0L;
     }
 
+    @Test
+    public void aTest(){}
 
     @Test
     public void calcTimeForSingleThread() {
@@ -33,6 +36,16 @@ public class GettingDataForGraphTest {
     @Test
     public void calcTimeForMultipleThread() {
         new ParallelFinder(testData, 9).checkThatAllIsPrime();
+    }
+
+    @Test
+    public void calcTimeForMultipleThread_1() {
+        new ParallelFinder(testData, 5).checkThatAllIsPrime();
+    }
+
+    @Test
+    public void calcTimeForMultipleThread_2() {
+        new ParallelFinder(testData, 13).checkThatAllIsPrime();
     }
 
     @Test

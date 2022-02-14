@@ -19,22 +19,11 @@ public class ParallelFinder implements Finder {
     @Override
     public boolean checkThatAllIsPrime() {
         List<List<Integer>> dataForThreads = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            AtomicInteger c = new AtomicInteger();
-            int finalI = i;
-            dataForThreads.add(
-                    list.stream()
-                            .filter((it) -> {
-                                if (c.get() % n == finalI) {
-                                    c.getAndIncrement();
-                                    return true;
-                                } else {
-                                    c.getAndIncrement();
-                                    return false;
-                                }
-                            })
-                            .collect(Collectors.toList())
-            );
+        for(int i = 0; i < n; i++){
+            dataForThreads.add(new ArrayList<>());
+        }
+        for(int i = 0; i < list.size(); i++){
+            dataForThreads.get(i % n).add(list.get(i));
         }
 
         List<Checker> threadsList = new ArrayList<>();
