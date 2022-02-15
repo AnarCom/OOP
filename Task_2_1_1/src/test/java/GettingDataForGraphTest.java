@@ -34,26 +34,21 @@ public class GettingDataForGraphTest {
     }
 
     @Test
-    public void calcTimeForMultipleThread() {
-        new ParallelFinder(testData, 9).checkThatAllIsPrime();
-    }
-
-    @Test
-    public void calcTimeForMultipleThread_1() {
-        new ParallelFinder(testData, 5).checkThatAllIsPrime();
-    }
-
-    @Test
-    public void calcTimeForMultipleThread_2() {
-        new ParallelFinder(testData, 13).checkThatAllIsPrime();
-    }
-
-    @Test
     public void calcTimeForParallelStream() {
         Optional<Boolean> result = testData.stream()
                 .parallel()
                 .map(SinglePrimeChecker::isPrime)
                 .reduce((x, y) -> x && y);
     }
+
+    @Test
+    public void calcTimeForMultipleThreads(){
+        for(int i = 2; i < 20; i++){
+            Long started = System.nanoTime();
+            new ParallelFinder(testData, i).checkThatAllIsPrime();
+            System.out.printf("%d: %d\n", i,  (System.nanoTime() - started) / 1000000);
+        }
+    }
+
 
 }
