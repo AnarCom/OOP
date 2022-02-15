@@ -49,6 +49,4 @@ public class GettingDataForGraphTest {
             System.out.printf("%d: %d\n", i,  (System.nanoTime() - started) / 1000000);
         }
     }
-
-
 }
