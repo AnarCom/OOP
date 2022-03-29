@@ -21,8 +21,7 @@ public class OrderProducer extends Thread {
             }
             try {
                 list.add(new Order(id++, (int) (50 * Math.random())));
-            } catch (InterruptedException ignored) {
-            }
+            } catch (InterruptedException ignored) {}
         }
     }
 }

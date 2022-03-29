@@ -1,6 +1,9 @@
 package collection;
 
+import order.Order;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,10 +64,39 @@ public class SharedList<T> {
         }
     }
 
-    public boolean isEmpty(){
-        synchronized (list){
+    public boolean isEmpty() {
+        synchronized (list) {
             return list.isEmpty();
         }
+    }
+
+    public List<T> reserveAndGet(int reserve) throws InterruptedException {
+        List<T> orders = new ArrayList<>();
+        boolean needWait = false;
+        synchronized (list) {
+            if (list.isEmpty()) {
+                needWait = true;
+            }
+        }
+        synchronized (EMPTY) {
+            EMPTY.wait();
+        }
+
+        synchronized (list) {
+            int t = Math.min(list.size(), reserve);
+            for (int i = 0; i < t; i++) {
+                var order = list.get(i);
+                orders.add(order);
+            }
+            if (t > 0) {
+                list.subList(0, t).clear();
+            }
+            synchronized (FULL) {
+                FULL.notify();
+            }
+        }
+
+        return orders;
     }
 
 

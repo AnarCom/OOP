@@ -16,7 +16,13 @@ public class DeliveryBoy extends Thread {
     @Override
     public void run() {
         while (true) {
-            List<Order> backpack = new ArrayList<>();
+            List<Order> backpack;
+            try {
+                backpack = warehouse.reserveAndGet(backpackSize);
+            } catch (InterruptedException ignored) {
+                continue;
+            }
+
             for (int i = 0; i < backpackSize; i++) {
                 try {
                     var order = warehouse.get();
@@ -28,7 +34,8 @@ public class DeliveryBoy extends Thread {
             backpack.forEach((it) -> {
                 try {
                     Thread.sleep(it.getDeliveryTime());
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
                 it.setStatus(OrderStatus.DELIVERED);
             });
         }
