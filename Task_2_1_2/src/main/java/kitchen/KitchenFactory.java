@@ -23,8 +23,6 @@ public class KitchenFactory {
                 exp.add(0);
             }
         }
-        exp.forEach((it) -> {
-            new Cooker(it, queueForKitchen, cokingTime, queueForWarehouse).start();
-        });
+        exp.forEach((it) -> new Cooker(it, queueForKitchen, cokingTime, queueForWarehouse).start());
     }
 }
