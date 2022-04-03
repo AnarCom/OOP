@@ -1,3 +1,4 @@
+import collection.Pizzeria;
 import factory.PizzeriaFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.PizzeriaConfiguration;
@@ -9,12 +10,14 @@ public class MainPizzeria {
 
     private static PizzeriaConfiguration configuration;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         if(createIfNotExists()){
             return;
         }
         loadConfiguration();
-        PizzeriaFactory.produce(configuration);
+        Pizzeria pizzeria = PizzeriaFactory.produce(configuration);
+        Thread.sleep(10000);
+        PizzeriaKiller.killPizzeria(pizzeria);
     }
 
     public static void loadConfiguration() throws IOException {

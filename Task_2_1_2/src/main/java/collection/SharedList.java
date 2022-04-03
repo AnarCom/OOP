@@ -1,39 +1,28 @@
 package collection;
 
-import order.Order;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class SharedList<T> {
-    private final List<T> list = new LinkedList<>();
-    private final Object EMPTY = new Object();
+    private final Queue<T> list = new LinkedList<>();
+    private final Integer limitSize;
     private final Object FULL = new Object();
+    private final Object EMPTY = new Object();
 
-    Integer limitSize;
 
     public SharedList(int limitSize) {
         this.limitSize = limitSize;
     }
 
     public void add(T d) throws InterruptedException {
-        boolean isNeedWait = false;
-        synchronized (list) {
-            if (list.size() > limitSize) {
-                isNeedWait = true;
-            }
-        }
-
-        if (isNeedWait) {
-            synchronized (FULL) {
+        synchronized (FULL) {
+            while (list.size() >= limitSize) {
                 FULL.wait();
             }
-        }
-
-        synchronized (list) {
-            list.add(d);
+            synchronized (list) {
+                list.add(d);
+            }
             synchronized (EMPTY) {
                 EMPTY.notify();
             }
@@ -41,22 +30,14 @@ public class SharedList<T> {
     }
 
     public T get() throws InterruptedException {
-        boolean isNeedWait = false;
-        synchronized (list) {
-            if (list.isEmpty()) {
-                isNeedWait = true;
-            }
-        }
-
-        if (isNeedWait) {
-            synchronized (EMPTY) {
+        synchronized (EMPTY) {
+            while (list.size() == 0) {
                 EMPTY.wait();
             }
-        }
-
-        synchronized (list) {
-            var tmp = list.get(0);
-            list.remove(0);
+            T tmp;
+            synchronized (list) {
+                tmp = list.poll();
+            }
             synchronized (FULL) {
                 FULL.notify();
             }
@@ -71,33 +52,21 @@ public class SharedList<T> {
     }
 
     public List<T> reserveAndGet(int reserve) throws InterruptedException {
-        List<T> orders = new ArrayList<>();
-        boolean needWait = false;
-        synchronized (list) {
-            if (list.isEmpty()) {
-                needWait = true;
-            }
-        }
         synchronized (EMPTY) {
-            EMPTY.wait();
-        }
-
-        synchronized (list) {
-            int t = Math.min(list.size(), reserve);
-            for (int i = 0; i < t; i++) {
-                var order = list.get(i);
-                orders.add(order);
+            while (list.isEmpty()) {
+                EMPTY.wait();
             }
-            if (t > 0) {
-                list.subList(0, t).clear();
+            List<T> val = new LinkedList<>();
+            synchronized (list) {
+                int n = Math.min(reserve, list.size());
+                for (int i = 0; i < n; i++) {
+                    val.add(list.poll());
+                }
             }
             synchronized (FULL) {
                 FULL.notify();
             }
+            return val;
         }
-
-        return orders;
     }
-
-
 }

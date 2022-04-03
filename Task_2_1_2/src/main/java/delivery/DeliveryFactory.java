@@ -9,7 +9,7 @@ import java.util.List;
 
 public class DeliveryFactory {
 
-    public static void createDeliveryBoys(
+    public static List<DeliveryBoy> createDeliveryBoys(
             SharedList<Order> warehouse,
             PizzeriaConfiguration.DeliveryConfiguration configuration
     ) {
@@ -22,8 +22,12 @@ public class DeliveryFactory {
             }
         }
 
+        List <DeliveryBoy> deliveryBoys = new ArrayList<>();
         backpackSizes.forEach((it) -> {
-            new DeliveryBoy(warehouse, it).start();
+            var deliveryBoy = new DeliveryBoy(warehouse, it);
+            deliveryBoy.start();
+            deliveryBoys.add(deliveryBoy);
         });
+        return deliveryBoys;
     }
 }

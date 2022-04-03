@@ -4,9 +4,10 @@ import collection.SharedList;
 import lombok.AllArgsConstructor;
 import order.Order;
 import order.OrderStatus;
+import thread.FiniteThread;
 
 @AllArgsConstructor
-public class Cooker extends Thread {
+public class Cooker extends FiniteThread {
     private Integer workExperience;
     private SharedList<Order> ordersList;
     private Integer produceTime;
@@ -14,7 +15,7 @@ public class Cooker extends Thread {
 
     @Override
     public void run() {
-        while (true){
+        while (isCont()){
             try {
                 var pizza = ordersList.get();
                 pizza.setStatus(OrderStatus.COOKING);
@@ -22,7 +23,6 @@ public class Cooker extends Thread {
                 pizza.setStatus(OrderStatus.WAIT_DELIVERY);
                 warehouse.add(pizza);
             } catch (InterruptedException ignored) {}
-
         }
     }
 }
