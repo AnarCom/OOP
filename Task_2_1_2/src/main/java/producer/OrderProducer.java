@@ -15,7 +15,7 @@ public class OrderProducer extends FiniteThread {
         while (this.isCont()) {
             try {
                 Thread.sleep((long) (50 * Math.random()));
-                list.add(new Order(id++, (int) (50 * Math.random())));
+                list.add(new Order(id++, (int) (500 * Math.random())));
             } catch (InterruptedException ignored) {
                 if(isCont()){
                     break;
