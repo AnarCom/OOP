@@ -13,8 +13,8 @@ public class SnakeLogic {
         this.ySize = ySize;
 
         snakePositions.add(new Position(3, 4));
-        snakePositions.add(new Position(4, 4));
-        snakePositions.add(new Position(5, 4));
+//        snakePositions.add(new Position(4, 4));
+//        snakePositions.add(new Position(5, 4));
     }
 
     private boolean isMoving = true;
@@ -53,6 +53,11 @@ public class SnakeLogic {
             isMoving = false;
             throw new DeadException();
         }
+
+        if(snakePositions.size() > 10){
+            throw new WinException();
+        }
+
     }
     public List<Pair<Position, PointType>> getSnakePositions(Orientation orientation,
                                                              List<Pair<Position, PointType>> field

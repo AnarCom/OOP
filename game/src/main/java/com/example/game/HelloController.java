@@ -36,26 +36,32 @@ public class HelloController implements Initializable {
     boolean block = false;
 
     public void onButtonClick(KeyEvent keyEvent) {
+
+        boolean safety = oldField
+                .stream()
+                .map(Pair::getSecond)
+                .anyMatch((i) -> i == PointType.SNAKE);
+
         if (block)
             return;
         switch (keyEvent.getCode()) {
             case W -> {
-                if (orientation == Orientation.BOTTOM)
+                if (orientation == Orientation.BOTTOM && safety)
                     break;
                 orientation = Orientation.TOP;
             }
             case A -> {
-                if (orientation == Orientation.RIGHT)
+                if (orientation == Orientation.RIGHT && safety)
                     break;
                 orientation = Orientation.LEFT;
             }
             case S -> {
-                if (orientation == Orientation.TOP)
+                if (orientation == Orientation.TOP && safety)
                     break;
                 orientation = Orientation.BOTTOM;
             }
             case D -> {
-                if (orientation == Orientation.LEFT)
+                if (orientation == Orientation.LEFT && safety)
                     break;
                 orientation = Orientation.RIGHT;
             }
@@ -95,6 +101,12 @@ public class HelloController implements Initializable {
                 var alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Game over");
                 alert.setContentText("Shake is dead");
+                alert.show();
+            } catch (WinException e) {
+                timeline.stop();
+                var alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("You win!");
+                alert.setContentText("Congratulation");
                 alert.show();
             }
         }));
