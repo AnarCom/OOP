@@ -1,4 +1,4 @@
-package entities
+package org.nsu.dsl.entities
 
 data class TaskResult(
     val isTestPassed: Boolean,

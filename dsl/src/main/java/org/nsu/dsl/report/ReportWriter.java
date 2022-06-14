@@ -1,8 +1,8 @@
 package org.nsu.dsl.report;
 
-import entities.Student;
-import entities.Task;
-import entities.TaskResult;
+import org.nsu.dsl.entities.Student;
+import org.nsu.dsl.entities.Task;
+import org.nsu.dsl.entities.TaskResult;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -17,13 +17,32 @@ public class ReportWriter {
 
     private final Map<String, Map<String, TaskResult>> res;
 
-    public ReportWriter(List<Student> students, String outputFolder, List<Task> tasks, Map<String, Map<String, TaskResult>> res) {
+    private final Map<String, List<Student>> skippedDirs;
+
+    private final List<String> excludedDirectories;
+
+    public ReportWriter(
+            List<Student> students,
+            String outputFolder,
+            List<Task> tasks,
+            Map<String, Map<String, TaskResult>> res,
+            Map<String, List<Student>> skippedDirs,
+            List<String> excludedDirectories) {
         this.students = students;
         this.outputFolder = outputFolder;
         this.tasks = tasks;
         this.res = res;
+        this.skippedDirs = skippedDirs;
+        this.excludedDirectories = excludedDirectories;
     }
 
+    private void tableBeginWriter(StringBuilder builder) {
+        builder.append("<table border='1'>");
+    }
+
+    private void tableEndWriter(StringBuilder builder) {
+        builder.append("</table>");
+    }
 
     private void tdWriter(StringBuilder builder, String content) {
         builder.append("<td>")
@@ -31,21 +50,20 @@ public class ReportWriter {
                 .append("</td>");
     }
 
-    private int criteriaWriter(StringBuilder builder, int sum, boolean criteria){
-        if(criteria) {
+    private int criteriaWriter(StringBuilder builder, int sum, boolean criteria) {
+        if (criteria) {
             tdWriter(builder, "+");
-            sum +=1;
+            sum += 1;
         } else {
             tdWriter(builder, "-");
         }
         return sum;
     }
 
-    public void prepareReport(){
-
+    public void prepareReport() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<body> <table border='1'>");
 
+        tableBeginWriter(builder);
 
         builder.append("<tr>");
 
@@ -75,7 +93,7 @@ public class ReportWriter {
             builder.append("<tr>");
             tdWriter(builder, student.getName());
             int totalSum = 0;
-            for (var task: tasks) {
+            for (var task : tasks) {
                 int sum = 0;
                 boolean exists = res.get(student.getName()).containsKey(task.getName());
                 var ans = res.get(student.getName()).get(task.getName());
@@ -89,7 +107,38 @@ public class ReportWriter {
             builder.append("</tr>");
         }
 
-        builder.append("</table> </body>");
+        tableEndWriter(builder);
+
+        tableBeginWriter(builder);
+
+        builder.append("<br> <h2>Unknown Dirs</h2>");
+
+        builder.append("<tr>");
+        tdWriter(builder, "Dir");
+        tdWriter(builder, "Student(s)");
+        builder.append("</tr>");
+
+        for (var dir : skippedDirs.keySet()) {
+            if(excludedDirectories.contains(dir)){
+                continue;
+            }
+            builder.append("<tr>");
+            tdWriter(builder, dir);
+            var studentListBuilder = new StringBuilder();
+            skippedDirs.get(dir).forEach((i) -> {
+                studentListBuilder.append(i.getName());
+                studentListBuilder.append("<br>");
+            });
+            tdWriter(
+                    builder,
+                    studentListBuilder.toString()
+            );
+            builder.append("</tr>");
+        }
+
+        tableEndWriter(builder);
+
+        builder.append("</body>");
 
         BufferedWriter writer;
         try {

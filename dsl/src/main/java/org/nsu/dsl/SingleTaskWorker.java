@@ -1,16 +1,13 @@
 package org.nsu.dsl;
 
-import entities.Student;
-import entities.Task;
-import entities.TaskResult;
+import org.nsu.dsl.entities.Student;
+import org.nsu.dsl.entities.Task;
+import org.nsu.dsl.entities.TaskResult;
 import org.apache.commons.io.FileUtils;
 import org.nsu.dsl.gradle.GradleWorker;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -23,7 +20,8 @@ public class SingleTaskWorker extends Thread {
 
     private final List<Task> tasks;
 
-    private Map <String, TaskResult> testResults;
+    private Map<String, TaskResult> testResults;
+    private List<String> strangeDirs = new ArrayList<>();
 
     public SingleTaskWorker(Student student, String tmpFolder, List<Task> tasks) {
         this.student = student;
@@ -105,20 +103,31 @@ public class SingleTaskWorker extends Thread {
         var availableTasks = studentDirsList.stream()
                 .filter(i ->
                         tasks.stream()
-                                .map(Task::getName)
-                                .anyMatch(j -> j.equals(i))
+                                .map(Task::getAlternativeNames)
+                                .anyMatch(j -> j.contains(i))
                 )
                 .collect(Collectors.toList());
         System.out.println(availableTasks);
+
+        //step -> getting not included dirs
+        var strangeDirsList = studentDirsList.stream()
+                .filter((i) -> !availableTasks.contains(i))
+                .collect(Collectors.toList());
         //step -> run tests
         var gradleThreads = availableTasks
                 .stream()
-                .map((i) -> new GradleWorker(new File(userTmpFolder + "/" + i + "/"), i))
+                .map((i) -> new GradleWorker(new File(userTmpFolder + "/" + i + "/"),
+                        tasks.stream()
+                                .filter((j) -> j.getAlternativeNames().contains(i))
+                                .findFirst()
+                                .get()
+                                .getName()
+                ))
                 .collect(Collectors.toList());
 
         gradleThreads.forEach(Thread::start);
 
-        Map <String, TaskResult> studentTestRes = new HashMap<>();
+        Map<String, TaskResult> studentTestRes = new HashMap<>();
         gradleThreads.forEach(i -> {
             try {
                 i.join();
@@ -129,9 +138,10 @@ public class SingleTaskWorker extends Thread {
             studentTestRes.put(i.getResult().getTaskName(), i.getResult());
         });
 
-        System.out.println(studentTestRes);
         //step -> return results
         testResults = studentTestRes;
+        this.strangeDirs = strangeDirsList;
+        System.out.println(this.strangeDirs);
     }
 
     public Map<String, TaskResult> getTestResults() {
@@ -141,4 +151,10 @@ public class SingleTaskWorker extends Thread {
     public Student getStudent() {
         return student;
     }
+
+
+    public List<String> getStrangeDirs() {
+        return strangeDirs;
+    }
+
 }

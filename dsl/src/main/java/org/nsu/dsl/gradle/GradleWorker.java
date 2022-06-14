@@ -1,6 +1,6 @@
 package org.nsu.dsl.gradle;
 
-import entities.TaskResult;
+import org.nsu.dsl.entities.TaskResult;
 import org.nsu.dsl.block.SingletonSemaphore;
 
 import java.io.File;

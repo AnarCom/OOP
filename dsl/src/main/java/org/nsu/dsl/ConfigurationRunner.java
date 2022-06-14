@@ -1,15 +1,16 @@
 package org.nsu.dsl;
 
-import entities.Student;
+import org.nsu.dsl.entities.Student;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import entities.Task;
-import entities.TaskResult;
+import org.nsu.dsl.entities.Task;
+import org.nsu.dsl.entities.TaskResult;
 import org.apache.commons.io.FileUtils;
 import org.nsu.dsl.report.ReportWriter;
 
@@ -21,11 +22,20 @@ public class ConfigurationRunner {
 
     private final List<Task> tasks;
 
-    public ConfigurationRunner(List<Student> students, String tmpFolder, String outputFolder, List<Task> tasks) {
+    private final List<String> excludedDirs;
+
+    public ConfigurationRunner(
+            List<Student> students,
+            String tmpFolder,
+            String outputFolder,
+            List<Task> tasks,
+            List<String> excludedDirs
+    ) {
         this.students = students;
         this.tmpFolder = tmpFolder;
         this.outputFolder = outputFolder;
         this.tasks = tasks;
+        this.excludedDirs = excludedDirs;
     }
 
     void deleteAndCreate(String path) {
@@ -66,15 +76,25 @@ public class ConfigurationRunner {
             }
         });
         Map<String, Map<String, TaskResult>> ans = new HashMap<>();
+        Map<String, List<Student>> skippedDirs = new HashMap<>();
         threads.forEach((i) -> ans.put(i.getStudent().getName(), i.getTestResults()));
+        threads.forEach((i) -> i.getStrangeDirs().forEach(
+                (j) -> {
+                    if(skippedDirs.containsKey(j)){
+                        skippedDirs.get(j).add(i.getStudent());
+                    } else {
+                        skippedDirs.put(j, new ArrayList<>());
+                        skippedDirs.get(j).add(i.getStudent());
+                    }
+                }
+        ));
 
-
-        prepareOutput(ans);
+        prepareOutput(ans, skippedDirs);
     }
 
 
 
-    private void prepareOutput(Map<String, Map<String, TaskResult>> res) {
-        new ReportWriter(students, outputFolder, tasks, res).prepareReport();
+    private void prepareOutput(Map<String, Map<String, TaskResult>> res, Map<String, List<Student>> skippedDirs) {
+        new ReportWriter(students, outputFolder, tasks, res, skippedDirs, excludedDirs).prepareReport();
     }
 }
