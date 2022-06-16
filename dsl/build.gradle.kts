@@ -1,32 +1,32 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    application
+	id("org.springframework.boot") version "2.7.0"
+	kotlin("jvm") version "1.6.21"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "org.nsu"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
-    implementation("commons-io:commons-io:2.11.0")
-    implementation ("org.apache.logging.log4j:log4j-api:2.17.2")
-    implementation ("org.apache.logging.log4j:log4j-core:2.17.2")
-}
-
-tasks.test {
-    useJUnitPlatform()
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(kotlin("script-runtime"))
+	implementation("commons-io:commons-io:2.11.0")
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+	kotlinOptions {
+		freeCompilerArgs = listOf("-Xjsr305=strict")
+		jvmTarget = "17"
+	}
 }
 
-application {
-    mainClass.set("MainKt")
+tasks.withType<Test> {
+	useJUnitPlatform()
 }
