@@ -17,7 +17,6 @@ class DefaultStudentRepCloner(
 
         val cloners = student.map {
             thread {
-                deleteAndCreateFolder(it.studentDir)
                 println("Starting of cloning rep: ${it.url}")
                 val cloneRes = cloner.clone(
                     it.url,
