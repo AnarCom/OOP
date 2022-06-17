@@ -3,6 +3,7 @@ package org.nsu.dsl.cloner
 import org.nsu.dsl.cloner.vcsCloner.GitClone
 import org.nsu.dsl.cloner.vcsCloner.VcsClone
 import org.nsu.dsl.entity.Student
+import org.nsu.dsl.util.createFolder
 import org.nsu.dsl.util.deleteAndCreateFolder
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.concurrent.thread
@@ -18,6 +19,7 @@ class DefaultStudentRepCloner(
         val cloners = student.map {
             thread {
                 println("Starting of cloning rep: ${it.url}")
+                createFolder(it.studentDir)
                 val cloneRes = cloner.clone(
                     it.url,
                     it.branch,
