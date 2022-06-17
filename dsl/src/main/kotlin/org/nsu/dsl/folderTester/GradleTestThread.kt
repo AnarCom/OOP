@@ -14,18 +14,23 @@ class GradleTestThread(
 
     val taskTestResult = TaskTestResult()
 
-    private fun gradleExecuteTests(dir:File): TestResultStatus {
+    private fun executeGradleTask(
+        args: List<String>,
+        workName: String,
+        dir: File,
+        timeoutMin:Long = 1
+    ): TestResultStatus {
         SingletonSemaphore.getSemaphore().acquire()
-        println("Starting test for student: ${student.name}, task:${task.name}")
+        println("Starting $workName for student: ${student.name}, task:${task.name}")
 
         var resVal = TestResultStatus.FAILED
         try {
             val builder = ProcessBuilder()
             // TODO implement for diff OS
-            builder.command(listOf("cmd.exe", "/c", "gradle", "test"))
+            builder.command(args)
             builder.directory(dir)
             val process = builder.start()
-            if (!process.waitFor(1, TimeUnit.MINUTES)) {
+            if (!process.waitFor(timeoutMin, TimeUnit.MINUTES)) {
                 process.destroy()
                 resVal = TestResultStatus.TIMEOUT
             } else {
@@ -39,39 +44,38 @@ class GradleTestThread(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        println("Finished test for student: ${student.name}, task:${task.name}")
+        println("Finished $workName for student: ${student.name}, task:${task.name}")
         SingletonSemaphore.getSemaphore().release()
-        return TestResultStatus.OK
+        return resVal
+    }
+
+    private fun gradleExecuteTests(dir: File): TestResultStatus {
+        return executeGradleTask(
+            listOf("cmd.exe", "/c", "gradle", "test"),
+            "test",
+            dir
+        )
     }
 
     private fun gradleExecuteJavadoc(dir: File): TestResultStatus {
-        SingletonSemaphore.getSemaphore().acquire()
-        println("Starting javadoc for student: ${student.name}, task:${task.name}")
-        var resVal = TestResultStatus.FAILED
-        try {
-            val builder = ProcessBuilder()
-            // TODO implement for diff OS
-            builder.command(listOf("cmd.exe", "/c", "gradle", "javadoc"))
-            builder.directory(dir)
-            val process = builder.start()
-            if (!process.waitFor(1, TimeUnit.MINUTES)) {
-                process.destroy()
-                resVal = TestResultStatus.TIMEOUT
-            } else {
-                val exitCode = process.exitValue()
-                process.destroy()
-                if (exitCode == 0) {
-                    resVal = TestResultStatus.OK
-                }
-            }
+        return executeGradleTask(
+            listOf("cmd.exe", "/c", "gradle", "javadoc"),
+            "javadoc",
+            dir
+        )
+    }
 
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private fun gradleExecuteCodestyle(dir: File): TestResultStatus {
+        val res = executeGradleTask(
+            listOf("cmd.exe", "/c", "gradle", "checkstyleMain"),
+            "checkstyle",
+            dir
+        )
+        return if(res == TestResultStatus.TIMEOUT){
+            TestResultStatus.FAILED
+        } else {
+            res
         }
-
-        println("Finished javadoc for student: ${student.name}, task:${task.name}")
-        SingletonSemaphore.getSemaphore().release()
-        return resVal
     }
 
 
@@ -85,6 +89,10 @@ class GradleTestThread(
         )
 
         taskTestResult.javadoc = gradleExecuteJavadoc(
+            file
+        )
+
+        taskTestResult.codestyle = gradleExecuteCodestyle(
             file
         )
     }

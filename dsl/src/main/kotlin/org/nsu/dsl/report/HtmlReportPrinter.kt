@@ -52,7 +52,7 @@ class HtmlReportPrinter : ReportPrinter {
         trWriter()
         tdWriter("Name")
         tasks.forEach {
-            tdWriter(3, it.name)
+            tdWriter(4, it.name)
         }
         tdWriter("")
         trEndWriter()
@@ -62,6 +62,7 @@ class HtmlReportPrinter : ReportPrinter {
         repeat(tasks.size) {
             tdWriter("Tests")
             tdWriter("Javadoc")
+            tdWriter("Codestyle")
             tdWriter("Sum")
         }
         tdWriter("Total")
@@ -76,18 +77,22 @@ class HtmlReportPrinter : ReportPrinter {
             tasks.forEach { task ->
                 var localSum = 0
                 if(!testsResult[student]!!.containsKey(task)){
-                    repeat(2){
+                    repeat(3){
                         tdWriter(TestResultStatus.FAILED.reportText)
                     }
                 } else {
                     val testRes = testsResult[student]!![task]!!
                     tdWriter(testRes.test.reportText)
                     tdWriter(testRes.javadoc.reportText)
+                    tdWriter(testRes.codestyle.reportText)
 
                     if(testRes.test != TestResultStatus.FAILED){
                         localSum += testRes.test.scoreChange
                         if(testRes.javadoc != TestResultStatus.FAILED){
                             localSum += testRes.javadoc.scoreChange
+                        }
+                        if(testRes.codestyle != TestResultStatus.FAILED){
+                            localSum += testRes.codestyle.scoreChange
                         }
                     }
                 }
