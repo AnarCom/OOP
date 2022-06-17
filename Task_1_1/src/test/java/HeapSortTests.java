@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +27,7 @@ public class HeapSortTests {
                 Arguments.of(
                         new int[0],
                         new int[0],
-                        1
+                        0
                 ),
                 Arguments.of(
                         new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, -1, 1},
